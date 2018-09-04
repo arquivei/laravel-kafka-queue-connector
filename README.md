@@ -42,19 +42,21 @@ Kafka Queue driver for Laravel
             'password' => env('SASL_PASSWORD'),
         ],
         'consumers' => [
-            [
-                'validation' => [
-                    'key' => [],
-                    'value' => '',
+            'default' => YourDefaultConsumerJob::class | false,
+            'customs' => [
+                [
+                    'validations' => [
+                        [
+                            'key' => [],
+                            'value' => '',
+                        ],
+                        [
+                            'key' => [],
+                            'value' => '',
+                        ],
+                    ],
+                    'job' => YourConsumerJob::class,
                 ],
-                'job' => YourConsumerJob::class,
-            ],
-            [
-                'validation' => [
-                    'key' => [],
-                    'value' => '',
-                ],
-                'job' => YourConsumerJob::class,
             ],
         ],
     ],
@@ -62,11 +64,10 @@ Kafka Queue driver for Laravel
 
 #### Important
 
-if you want to consume events with custom structures, add `consumers` with the necessary rules
+- if you want to consume events with custom structures, add `consumers` with the necessary rules 
 
 ## Run Tests
 `$ vendor/bin/phpunit tests`
 
 ## TODO
-- Add validation for default consumer
-- Add any validation option for one consumer
+- Add validation for illuminate pattern in `src/Queue/Jobs/KafkaJob@getRawBody`

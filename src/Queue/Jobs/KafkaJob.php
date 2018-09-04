@@ -106,15 +106,19 @@ class KafkaJob extends Job implements JobContract
         $job = $this->message->payload;
 
         $classConsumer = null;
-        foreach ($this->consumers as $consumer) {
-            $validation = $this->getValueValidation($consumer);
-            if ($validation === $consumer['validation']['value']) {
+        foreach ($this->consumers['customs'] as $consumer) {
+            if ($this->checkValidations($consumer['validations'])) {
                 $classConsumer = $consumer['job'];
                 break;
             }
         }
+
+        if (is_null($classConsumer) && $this->checkConsumerDefault()) {
+            $classConsumer = $this->consumers['default'];
+        }
+
         if (!is_null($classConsumer)) {
-            $job = json_encode([
+            return json_encode([
                 'displayName' => $classConsumer,
                 'job' => 'Illuminate\Queue\CallQueuedHandler@call',
                 'maxTries' => null,
@@ -131,13 +135,37 @@ class KafkaJob extends Job implements JobContract
     }
 
     /**
-     * @param array $consumer
+     * @return bool
+     */
+    private function checkConsumerDefault(): bool
+    {
+        return is_string($this->consumers['default']) && !empty($this->consumers['default']);
+    }
+
+    /**
+     * @param array $validations
+     * @return bool
+     */
+    private function checkValidations(array $validations): bool
+    {
+        foreach ($validations as $validation) {
+            $value = $this->getValueValidation($validation['key']);
+            if ($value != $validation['value']) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array $keys
      * @return mixed
      */
-    private function getValueValidation(array $consumer)
+    private function getValueValidation(array $keys)
     {
         $validation = json_decode($this->message->payload);
-        foreach ($consumer['validation']['key'] as $key) {
+        foreach ($keys as $key) {
             $validation = $validation->$key ?? $validation;
         }
         return $validation;

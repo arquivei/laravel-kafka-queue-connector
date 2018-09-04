@@ -26,5 +26,7 @@ class KafkaJobTest extends TestCase
         $this->assertTrue(method_exists($kafkaJob, 'getRawBody'));
         $this->assertTrue(method_exists($kafkaJob, 'unserialize'));
         $this->assertTrue(method_exists($kafkaJob, 'getValueValidation'));
+        $this->assertTrue(method_exists($kafkaJob, 'checkValidations'));
+        $this->assertTrue(method_exists($kafkaJob, 'checkConsumerDefault'));
     }
 }
