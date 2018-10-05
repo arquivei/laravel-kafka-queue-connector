@@ -150,7 +150,7 @@ class KafkaJob extends Job implements JobContract
     {
         foreach ($validations as $validation) {
             $value = $this->getValueValidation($validation['key']);
-            if ($value != $validation['value']) {
+            if ($value !== $validation['value']) {
                 return false;
             }
         }
