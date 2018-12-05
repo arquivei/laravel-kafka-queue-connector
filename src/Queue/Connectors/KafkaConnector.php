@@ -47,7 +47,6 @@ class KafkaConnector implements ConnectorInterface
         $conf->set('group.id', $config['group.id']);
         $conf->set('metadata.broker.list', $config['brokers']);
         $conf->set('enable.auto.commit', 'false');
-        $conf->set('offset.store.method', 'broker');
         $conf->setDefaultTopicConf($topicConf);
 
         $conf->set('security.protocol', $config['security.protocol']);
