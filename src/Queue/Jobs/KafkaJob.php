@@ -177,7 +177,7 @@ class KafkaJob extends Job implements JobContract
      */
     private function validateValueNotArray($value, $validation): bool
     {
-        return !is_array($validation['value']) && $value !== $validation['value'];
+        return !is_array($validation) && $value !== $validation;
     }
 
     /**
