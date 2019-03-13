@@ -149,6 +149,7 @@ class KafkaJob extends Job implements JobContract
     private function checkValidations(array $validations): bool
     {
         foreach ($validations as $validation) {
+            $value = $this->getValueValidation($validation['key']);
             if($this->validateValueAsArray($value,$validation['value'])) {
                 return false;
             }
